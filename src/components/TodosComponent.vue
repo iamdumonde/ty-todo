@@ -2,7 +2,7 @@
   <div>
     <TodoHeader @add-todo="addTodo" />
 
-    <TodoMain :taches="filteredTodos" @delete-todo="deleteTodo" @update-todo="updateTodo" @edit-todo="editTodo" />
+    <TodoMain :taches="filteredTodos" @delete-todo="deleteTodo" @update-todo="updateTodo" @edit-todo="editTodo" @toggle-all-input="toggleAllInput"/>
 
     <TodoFooter :todos="todos" @delete-completed="deleteCompleted"/>
 
@@ -76,6 +76,13 @@ function editTodo(todo: Todo, value: string) {
 
 function deleteCompleted(): void {
   todos.value = todos.value.filter((todo) =>!todo.complete)
+}
+
+function toggleAllInput(value: boolean) {
+  // alert("toggleAllInput: value = " + value )
+  todos.value.forEach((todo) => {
+    todo.complete = value
+  })
 }
 </script>
 
