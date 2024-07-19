@@ -6,7 +6,6 @@
 
     <TodoFooter :todos="todos" @delete-completed="deleteCompleted"/>
 
-    <!-- <pre>{{ filteredTodos }}</pre> -->
   </div>
 </template>
 
@@ -15,7 +14,7 @@ import TodoHeader from '@/components/TodoHeader.vue'
 import TodoMain from '@/components/TodoMain.vue'
 import TodoFooter from '@/components/TodoFooter.vue'
 import type { Todo } from '@/@types'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { nanoid } from 'nanoid'
 import { useStorage } from '@vueuse/core'
 import { useRoute } from 'vue-router'
@@ -79,7 +78,6 @@ function deleteCompleted(): void {
 }
 
 function toggleAllInput(value: boolean) {
-  // alert("toggleAllInput: value = " + value )
   todos.value.forEach((todo) => {
     todo.complete = value
   })

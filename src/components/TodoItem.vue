@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import type { Todo } from '@/@types'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 const props = defineProps<{
   todo: Todo
 }>()
@@ -74,7 +74,6 @@ function editTodo() {
 }
 
 function cancelEdit() {
-  console.log('cancel edit')
   editing.value = false
 }
 </script>

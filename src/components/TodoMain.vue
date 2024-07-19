@@ -1,5 +1,5 @@
 <template>
-  <main class="main">
+  <main class="main" v-show="taches.length > 0">
     <div class="">
       <input type="checkbox" name="" id="toggle-all-input" class="toggle-all" v-model="toggleAll">
       <label htmlFor="toggle-all-input">Switcher toutes les tâches</label>
@@ -16,7 +16,6 @@
     </ul>
   </main>
 
-  <pre>{{ toggleAll }}</pre>
 </template>
 
 <script setup lang="ts">
