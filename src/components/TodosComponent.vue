@@ -2,10 +2,15 @@
   <div>
     <TodoHeader @add-todo="addTodo" />
 
-    <TodoMain :taches="filteredTodos" @delete-todo="deleteTodo" @update-todo="updateTodo" @edit-todo="editTodo" @toggle-all-input="toggleAllInput"/>
+    <TodoMain
+      :taches="filteredTodos"
+      @delete-todo="deleteTodo"
+      @update-todo="updateTodo"
+      @edit-todo="editTodo"
+      @toggle-all-input="toggleAllInput"
+    />
 
-    <TodoFooter :todos="todos" @delete-completed="deleteCompleted"/>
-
+    <TodoFooter :todos="todos" @delete-completed="deleteCompleted" />
   </div>
 </template>
 
@@ -20,39 +25,37 @@ import { useStorage } from '@vueuse/core'
 import { useRoute } from 'vue-router'
 
 // const todos = ref<Todo[]>([])
-const todos = useStorage<Todo[]>('todoapp-todos', []);
+const todos = useStorage<Todo[]>('todoapp-todos', [])
 
 // router
-const route = useRoute();
-
+const route = useRoute()
 
 // objet de filtre
 const filters = computed(() => {
   return {
     all: todos,
     waiting: todos.value.filter((todo) => !todo.complete),
-    completed: todos.value.filter((todo) => todo.complete),
-  };
+    completed: todos.value.filter((todo) => todo.complete)
+  }
 })
 
-const waitingTodos = computed<Todo[]>(() => filters.value.waiting);
-const completedTodos = computed<Todo[]>(() => filters.value.completed);
-
+const waitingTodos = computed<Todo[]>(() => filters.value.waiting)
+const completedTodos = computed<Todo[]>(() => filters.value.completed)
 
 const filteredTodos = computed(() => {
   switch (route.name) {
     case 'waiting':
-      return waitingTodos.value;
+      return waitingTodos.value
     case 'completed':
-      return completedTodos.value;
+      return completedTodos.value
     default:
-      return todos.value;
+      return todos.value
   }
 })
 
 function addTodo(value: string): void {
   if (value.trim().length === 0) {
-    return; // Do nothing if the input is empty or whitespace.
+    return // Do nothing if the input is empty or whitespace.
   }
   todos.value.push({
     id: nanoid(),
@@ -74,7 +77,7 @@ function editTodo(todo: Todo, value: string) {
 }
 
 function deleteCompleted(): void {
-  todos.value = todos.value.filter((todo) =>!todo.complete)
+  todos.value = todos.value.filter((todo) => !todo.complete)
 }
 
 function toggleAllInput(value: boolean) {

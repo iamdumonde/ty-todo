@@ -21,7 +21,7 @@
                 type="password"
                 required
               ></v-text-field>
-              <v-btn :disabled="!valid" color="primary" @click="login"> Login </v-btn>
+              <v-btn :disabled="!valid" color="primary" @click="handleLogin"> Login </v-btn>
             </v-form>
           </v-card-text>
         </v-card>
@@ -33,46 +33,33 @@
 </template>
 
 <script setup lang="ts">
-import { auth } from '@/configs/firebase';
-import { useAuth } from '@vueuse/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import {ref} from 'vue'
+import { useAuth } from '@/composables/auth'
+import { ref } from 'vue'
 
-const valid = ref(false);
-const email = ref('');
-const password = ref('');
+const valid = ref(false)
+const email = ref('')
+const password = ref('')
 
 const emailRules = [
   (v: string) => !!v || 'Email est requis !',
-  (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid',
-];
+  (v: string) => /.+@.+\..+/.test(v) || 'Email must be valid'
+]
 
 const passwordRules = [
   (v: string) => !!v || 'Password est requis !',
-  (v: string) => v.length >= 6 || 'Password must be at least 6 characters',
-];
+  (v: string) => v.length >= 6 || 'Password must be at least 6 characters'
+]
 
-const form = ref();
-const {user} = useAuth(auth);
+const form = ref()
+const { user, login } = useAuth()
 
-function login() {
-  signInWithEmailAndPassword(auth, email.value, password.value)
-  // .then((userCredential) => {
-  //   // Signed in 
-  //   const user = userCredential.user;
-  //   // ...
-  // })
-  // .catch((error) => {
-  //   const errorCode = error.code;
-  //   const errorMessage = error.message;
-  // });
-
+async function handleLogin() {
+  await login(email.value, password.value)
 }
-
 </script>
 
 <style scoped>
 .text-center {
-    text-align: center;
+  text-align: center;
 }
 </style>
