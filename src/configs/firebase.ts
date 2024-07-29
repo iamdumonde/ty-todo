@@ -1,5 +1,6 @@
 import { initializeApp, type FirebaseOptions } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -16,4 +17,7 @@ const app = initializeApp(firebaseConfig)
 // Initialize authentication service
 const auth = getAuth(app)
 
-export { auth }
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+
+export { auth, db }
