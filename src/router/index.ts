@@ -1,9 +1,9 @@
 import TodoView from '@/views/TodoView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import { useAuth } from '@vueuse/firebase'
+// import { useAuth } from '@vueuse/firebase'
 import { createRouter, createWebHistory } from 'vue-router'
-import { auth } from '@/configs/firebase'
+// import { auth } from '@/configs/firebase'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
