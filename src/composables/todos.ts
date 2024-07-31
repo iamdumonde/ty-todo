@@ -12,7 +12,10 @@ import {
 } from 'firebase/firestore'
 import { ref } from 'vue'
 
-const todos = ref<Todo[]>([]);
+const firebaseTodos = ref<Todo[]>([]);
+
+// fonction s'exécutant à chaque fois l'on interagis avec la BDD
+
 
 export const useTodos = () => {
   //récupération de tâches
@@ -37,7 +40,7 @@ export const useTodos = () => {
   }
 
   //Gestion de tâches
-  async function addTodo(todoTitle: string) {
+  async function createTodo(todoTitle: string) {
     try {
       await addDoc(collection(db, 'todos'), {
         title: todoTitle,
@@ -65,10 +68,10 @@ export const useTodos = () => {
   }
 
   return {
-    todos,
+    firebaseTodos,
     getTodos,
     getTodo,
-    addTodo,
+    createTodo,
     changeTodo,
     removeTodo
   }

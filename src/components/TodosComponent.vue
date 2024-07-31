@@ -23,9 +23,15 @@ import { computed } from 'vue'
 import { nanoid } from 'nanoid'
 import { useStorage } from '@vueuse/core'
 import { useRoute } from 'vue-router'
+import { useTodos } from '@/composables/todos'
 
 // const todos = ref<Todo[]>([])
 const todos = useStorage<Todo[]>('todoapp-todos', [])
+
+// 
+const {createTodo, changeTodo, getTodo, getTodos, removeTodo, firebaseTodos} = useTodos()
+
+
 
 // router
 const route = useRoute()
@@ -53,7 +59,7 @@ const filteredTodos = computed(() => {
   }
 })
 
-function addTodo(value: string): void {
+async function addTodo(value: string) {
   if (value.trim().length === 0) {
     return // Do nothing if the input is empty or whitespace.
   }
@@ -62,6 +68,9 @@ function addTodo(value: string): void {
     title: value,
     complete: false
   })
+
+  await createTodo(value);
+
 }
 
 function deleteTodo(todo: Todo): void {
