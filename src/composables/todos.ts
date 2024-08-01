@@ -7,24 +7,40 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   serverTimestamp,
   updateDoc
 } from 'firebase/firestore'
 import { ref } from 'vue'
 
-const firebaseTodos = ref<Todo[]>([]);
+const firebaseTodos = ref<Todo[]>([])
 
 // fonction s'exécutant à chaque fois l'on interagis avec la BDD
-
+onSnapshot(collection(db, 'todos'), (snapShot) => {
+  snapShot.docChanges().forEach((change) => {
+    if (change.type === 'added') {
+      console.log('une donnée ajoutée')
+    } else if (change.type === 'modified') {
+      console.log('une donnée modifiée')
+    } else {
+      console.log('une donnée supprimée')
+    }
+  })
+})
 
 export const useTodos = () => {
   //récupération de tâches
   async function getTodos() {
     const querySnapshot = await getDocs(collection(db, 'todos'))
     querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
-    });
-
+      // on ajoute l'ensemble des tâches dans le tableau
+      const todo: Todo = {
+        id: doc.ref.id,
+        title: doc.data().title,
+        complete: doc.data().complete
+      }
+      firebaseTodos.value.push(todo)
+    })
   }
 
   async function getTodo(todo: Todo) {
@@ -49,7 +65,7 @@ export const useTodos = () => {
         updatedAt: null
       })
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
@@ -58,7 +74,7 @@ export const useTodos = () => {
     await updateDoc(doc(db, 'todos', todo.id), {
       title: todo.title,
       complete: todo.complete,
-      updatedAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
     })
   }
 

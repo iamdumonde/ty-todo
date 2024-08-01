@@ -11,6 +11,8 @@
     />
 
     <TodoFooter :todos="todos" @delete-completed="deleteCompleted" />
+
+    <pre>{{ {firebaseTodos} }}</pre>
   </div>
 </template>
 
@@ -19,22 +21,25 @@ import TodoHeader from '@/components/TodoHeader.vue'
 import TodoMain from '@/components/TodoMain.vue'
 import TodoFooter from '@/components/TodoFooter.vue'
 import type { Todo } from '@/@types'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { nanoid } from 'nanoid'
-import { useStorage } from '@vueuse/core'
 import { useRoute } from 'vue-router'
 import { useTodos } from '@/composables/todos'
 
-// const todos = ref<Todo[]>([])
-const todos = useStorage<Todo[]>('todoapp-todos', [])
 
 // 
 const {createTodo, changeTodo, getTodo, getTodos, removeTodo, firebaseTodos} = useTodos()
 
-
+const todos = computed(() => firebaseTodos.value);
 
 // router
 const route = useRoute()
+
+//
+onMounted(async () => {
+  await getTodos();
+})
+
 
 // objet de filtre
 const filters = computed(() => {
