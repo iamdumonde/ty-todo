@@ -18,12 +18,27 @@ const firebaseTodos = ref<Todo[]>([])
 // fonction s'exécutant à chaque fois l'on interagis avec la BDD
 onSnapshot(collection(db, 'todos'), (snapShot) => {
   snapShot.docChanges().forEach((change) => {
+    console.log("add");
     if (change.type === 'added') {
-      console.log('une donnée ajoutée')
+      const todo = {
+        id: change.doc.ref.id,
+        title: change.doc.data().title,
+        complete: change.doc.data().complete
+      }
+      firebaseTodos.value.push(todo)
     } else if (change.type === 'modified') {
-      console.log('une donnée modifiée')
+      const index = firebaseTodos.value.findIndex((todo) => todo.id === change.doc.ref.id)
+      console.log(index);
+
+      if (index !== -1){
+        firebaseTodos.value[index] = {
+          ...firebaseTodos.value[index],
+          title: change.doc.data().title,
+          complete: change.doc.data().complete
+        }
+      }
     } else {
-      console.log('une donnée supprimée')
+      firebaseTodos.value = firebaseTodos.value.filter((todo) => todo.id === change.doc.ref.id)
     }
   })
 })
@@ -39,7 +54,7 @@ export const useTodos = () => {
         title: doc.data().title,
         complete: doc.data().complete
       }
-      firebaseTodos.value.push(todo)
+      // firebaseTodos.value.push(todo)
     })
   }
 
@@ -70,10 +85,10 @@ export const useTodos = () => {
   }
 
   //Modification de tâches
-  async function changeTodo(todo: Todo) {
+  async function changeTodo(todo: Todo, newTodo: Todo) {
     await updateDoc(doc(db, 'todos', todo.id), {
-      title: todo.title,
-      complete: todo.complete,
+      title: newTodo.title,
+      complete: newTodo.complete,
       updatedAt: serverTimestamp()
     })
   }

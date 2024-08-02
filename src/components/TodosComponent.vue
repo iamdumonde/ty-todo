@@ -2,17 +2,12 @@
   <div>
     <TodoHeader @add-todo="addTodo" />
 
-    <TodoMain
-      :taches="filteredTodos"
-      @delete-todo="deleteTodo"
-      @update-todo="updateTodo"
-      @edit-todo="editTodo"
-      @toggle-all-input="toggleAllInput"
-    />
+    <TodoMain :taches="filteredTodos" @delete-todo="deleteTodo" @update-todo="updateTodo" @edit-todo="editTodo"
+      @toggle-all-input="toggleAllInput" />
 
     <TodoFooter :todos="todos" @delete-completed="deleteCompleted" />
 
-    <pre>{{ {firebaseTodos} }}</pre>
+    <!-- <pre> {{  { todos} }}</pre> -->
   </div>
 </template>
 
@@ -28,7 +23,7 @@ import { useTodos } from '@/composables/todos'
 
 
 // 
-const {createTodo, changeTodo, getTodo, getTodos, removeTodo, firebaseTodos} = useTodos()
+const { createTodo, changeTodo, getTodo, getTodos, removeTodo, firebaseTodos } = useTodos()
 
 const todos = computed(() => firebaseTodos.value);
 
@@ -68,26 +63,26 @@ async function addTodo(value: string) {
   if (value.trim().length === 0) {
     return // Do nothing if the input is empty or whitespace.
   }
-  todos.value.push({
-    id: nanoid(),
-    title: value,
-    complete: false
-  })
-
   await createTodo(value);
 
 }
 
-function deleteTodo(todo: Todo): void {
-  todos.value = todos.value.filter((t) => t !== todo)
+async function deleteTodo(todo: Todo) {
+  await deleteTodo(todo);
 }
 
-function updateTodo(todo: Todo, completedValue: boolean) {
-  todo.complete = completedValue
+async function updateTodo(todo: Todo, completedValue: boolean) {
+  changeTodo(todo, {
+    ...todo,
+    complete: completedValue
+  });
 }
 
-function editTodo(todo: Todo, value: string) {
-  todo.title = value
+function editTodo(todo: Todo, titleValue: string) {
+  changeTodo(todo, {
+    ...todo,
+    title: titleValue
+  });
 }
 
 function deleteCompleted(): void {
